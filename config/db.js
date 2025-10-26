@@ -78,3 +78,74 @@ async function connectDB() {
 }
 
 export default connectDB;
+
+
+
+// NB: Final code 
+
+
+// /config/inngest.js (Focus on the syncUserCreation content)
+
+// Assume you have imported 'User' model and 'connectDB' function
+// import User from '../models/User'; 
+// import connectDB from '../config/db'; 
+
+// Recommended placeholder image URL
+// const DEFAULT_IMAGE_URL = "https://cdn.example.com/placeholder-user.png"; 
+
+// export const syncUserCreation = inngest.createFunction(
+//   { id: 'sync-user-from-clerk' }, // Your function ID
+//   { event: 'clerk/user.created' },
+//   async ({ event }) => {
+    
+//     // Deconstruct fields from the event data
+//     const { id, first_name, last_name, email_addresses, image_url } = event.data;
+
+//     // --- Critical Data Safety Checks ---
+    
+//     const email = email_addresses?.[0]?.email_address;
+//     if (!email) {
+//       throw new Error("Clerk event is missing a primary email address.");
+//     }
+    
+//     // Ensure the name is a safe, non-null string
+//     const name = `${first_name || ''} ${last_name || ''}`.trim();
+//     if (!name) {
+//       throw new Error("Clerk event is missing required name fields.");
+//     }
+    
+//     // --- Construct Data Object (Ensuring Correct Mongoose Key Names) ---
+
+//     const userData = {
+//       _id: id,
+//       email: email,
+//       name: name, 
+      
+//       // FIX: Use the 'image_url' from the payload OR the fallback.
+//       // NOTE: Key is 'imageUrl' (camelCase) to match the schema.
+//       imageUrl: image_url || DEFAULT_IMAGE_URL, 
+      
+//       cartItems: {},
+//     };
+    
+//     // --- Database Operation ---
+    
+//     await connectDB();
+    
+//     // Use findOneAndUpdate with upsert: true for idempotent creation
+//     await User.findOneAndUpdate(
+//       { _id: id },
+//       userData,
+//       { 
+//         upsert: true,        // Create the document if it doesn't exist
+//         new: true,           // Return the new document (optional, but good practice)
+//         runValidators: true  // Run validation checks on the upserted data
+//       }
+//     );
+    
+//     return { 
+//       success: true, 
+//       message: `User ${id} created/synced successfully with Mongoose.`,
+//     };
+//   }
+// );
