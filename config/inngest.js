@@ -9,7 +9,7 @@ export const inngest = new Inngest({ id: "QuickShop" });
 
 export const syncUserCreation = inngest.createFunction(
   {
-    id: "sunc-user-from-clerk",
+    id: "sync-user-from-clerk",
   },
   {
     event: "clerk/user.created",
